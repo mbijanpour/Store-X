@@ -2,20 +2,9 @@
     "cSpell.words": [
         "superadmin"
     ],
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5432,
-            "askForPassword": true,
-            "driver": "PostgreSQL",
-            "name": "Store-X",
-            "database": "FoodOnline_db",
-            "username": "postgres"
-        }
-    ],
+    "sqltools.connections": [],
     "[python]": {
-        "editor.defaultFormatter": "ms-python.autopep8"
+        "editor.defaultFormatter": "ms-python.python"
     },
     "python.formatting.provider": "none",
     "docwriter.progress.trackFunctions": false,
