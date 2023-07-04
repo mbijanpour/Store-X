@@ -1,0 +1,25 @@
+{
+    "cSpell.words": [
+        "superadmin"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "Store-X",
+            "database": "FoodOnline_db",
+            "username": "postgres"
+        }
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none",
+    "docwriter.progress.trackFunctions": false,
+    "docwriter.progress.trackClasses": true,
+    "docwriter.progress.trackTypes": true,
+    "docwriter.progress.trackMethods": false
+}
