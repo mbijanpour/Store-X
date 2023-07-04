@@ -118,3 +118,32 @@ class User(AbstractBaseUser):
 
     def __str__(self) -> str:
         return self.email
+
+
+class userProfile(models.Model):
+    """
+        this class is used to create a user profile for the user 
+        so obviously we have one to one relation with the user model
+        meaning that one user can have one profile with its email address
+        
+        the PictureField requires pillow package to be installed
+        the upload_to = ? is the folder where the picture will be stored
+        
+        for the picture files we should have configure the media directories as we dot
+        the static files in the settings.py      
+    """
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='users/profile_pictures', blank=True, null=True)
+    cover_photo = models.ImageField(upload_to='users/cover_photos', blank=True, null=True)
+    first_address = models.TextField(blank=True, null=True)
+    second_address = models.TextField(blank=True, null=True)
+    province = models.CharField(max_length=50, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    zipcode = models.CharField(max_length=6, blank=True, null=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    
+    
+    def __str__(self) -> str:
+        return self.user.email

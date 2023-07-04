@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User
+from .models import User, userProfile
 
 
 @admin.register(User)
@@ -22,3 +22,16 @@ class UserAdmin(admin.ModelAdmin):
         
     def promote(self, request, queryset):
         queryset.update(is_active=True)
+        
+
+@admin.register(userProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'province', 'city', 'zipcode')
+    list_display_links = ('id', 'user')
+    search_fields = ('user',)
+    fieldsets = ( 
+        ('user', {'fields': ('user',)}),
+        ('pictures', {'fields': ('profile_picture', 'cover_photo')}),
+        ('location', {'fields': ('province', 'city', 'zipcode')}),
+        ('address', {'fields': ('first_address', 'second_address')}),
+    )
