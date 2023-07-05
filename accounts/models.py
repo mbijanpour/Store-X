@@ -45,7 +45,7 @@ class AccountManager(BaseUserManager):
         """
             creates a user with the above method then set the flowing states true
         """
-        
+
         user = self.create_user(
             email=self.normalize_email(email),
             username=username,
@@ -68,8 +68,8 @@ class User(AbstractBaseUser):
         has_perm => this method is used to check if the user has a specific permission in here we return admins only
         has_module_perms => this method is used to check if the user has permission to a specific module or not
         here we return True which indicates that the user has permission to any module
-    """    
-    
+    """
+
     PROVIDER = 1
     COSTUMER = 2
 
@@ -82,7 +82,7 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=50)
-    # we have three roles: provider, costumer, admin 
+    # we have three roles: provider, costumer, admin
     # we have to define the role of the user when creating one
     role = models.SmallIntegerField(
         choices=ROLE_CHOICES, blank=True, null=True)
@@ -125,17 +125,24 @@ class userProfile(models.Model):
         this class is used to create a user profile for the user 
         so obviously we have one to one relation with the user model
         meaning that one user can have one profile with its email address
-        
+        .................................................................
         the PictureField requires pillow package to be installed
         the upload_to = ? is the folder where the picture will be stored
-        
-        for the picture files we should have configure the media directories as we dot
+        .................................................................
+        for the picture files we should have configure the media directories as we do
         the static files in the settings.py      
     """
+
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, blank=True, null=True)
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='users/profile_pictures', blank=True, null=True)
-    cover_photo = models.ImageField(upload_to='users/cover_photos', blank=True, null=True)
+    # user profile pictures
+    profile_picture = models.ImageField(
+        upload_to='users/profile_pictures', blank=True, null=True)
+    cover_photo = models.ImageField(
+        upload_to='users/cover_photos', blank=True, null=True)
+    
+    # other user details that are only for the profile not the user instance itself
     first_address = models.TextField(blank=True, null=True)
     second_address = models.TextField(blank=True, null=True)
     province = models.CharField(max_length=50, blank=True, null=True)
@@ -143,7 +150,6 @@ class userProfile(models.Model):
     zipcode = models.CharField(max_length=6, blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    
-    
+
     def __str__(self) -> str:
         return self.user.email
