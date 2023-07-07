@@ -47,6 +47,7 @@ def registerUser(request):
             user.role = User.COSTUMER
             
             user.save()            
+            messages.success(request, f"User {user.username} has been created successfully")
             
             return redirect('registerUser')
         else:
