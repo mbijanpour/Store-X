@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from vendor.forms import VendorForm
 from .forms import UserForm
 from .models import User, userProfile
-from django.contrib import messages
+from django.contrib import messages, auth
 
 
 def registerUser(request):
@@ -14,8 +14,10 @@ def registerUser(request):
         linked to the user, because the form is actually a user instance
         that we are sending to the registerUser.html 
     """
-
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in")
+        return redirect('dashboard')
+    elif request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             """
@@ -60,6 +62,7 @@ def registerUser(request):
     return render(request, 'accounts/registerUser.html', context)
 
 def registerVendor(request):
+    
     """
         this function will create vendors, as the logic is like the pervious 
         but there are some issues for example we set the user form like the pervious
@@ -72,7 +75,10 @@ def registerVendor(request):
         but we need the user profile as shown so we need to get the same userprofile
         as it is created instantly after user created (USING SIGNALS) 
     """
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in")
+        return redirect('dashboard')
+    elif request.method == 'POST':
         form = UserForm(request.POST)
         v_form = VendorForm(request.POST, request.FILES)
         
@@ -113,3 +119,33 @@ def registerVendor(request):
             'v_form': v_form,
     }
     return render(request, 'accounts/registerVendor.html', context=context)
+
+
+def login(request):
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in")
+        return redirect('dashboard')
+    elif request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        
+        user = auth.authenticate(email=email, password=password)
+        
+        if user is not None:
+            auth.login(request, user)
+            messages.success(request, "You are logged in successfully")
+            return redirect('dashboard')
+            
+        else:
+            messages.error(request, "Invalid username or password")
+            return redirect('login')
+        
+    return render(request, 'accounts/login.html')
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request, "You are logged out successfully")
+    return redirect('login')
+
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
