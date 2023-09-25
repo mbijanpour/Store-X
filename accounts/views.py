@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
+
+from vendor.forms import VendorForm
 from .forms import UserForm
-from .models import User
+from .models import User, userProfile
 from django.contrib import messages
 
 
@@ -56,3 +58,58 @@ def registerUser(request):
         form = UserForm()
     context = {'form': form}
     return render(request, 'accounts/registerUser.html', context)
+
+def registerVendor(request):
+    """
+        this function will create vendors, as the logic is like the pervious 
+        but there are some issues for example we set the user form like the pervious
+        and then we get receive them on two different form as vendor and user forms
+        then after validating we create the user instance
+        .............................................................................
+        because we need the user first to create the vendor instance so we set the
+        commit to false so we can set the user and then the user profile and others
+        .............................................................................
+        but we need the user profile as shown so we need to get the same userprofile
+        as it is created instantly after user created (USING SIGNALS) 
+    """
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        v_form = VendorForm(request.POST, request.FILES)
+        
+        if form.is_valid() and v_form.is_valid():
+            first_name = form.cleaned_data.get('first_name')
+            last_name  = form.cleaned_data.get('last_name')
+            username   = form.cleaned_data.get('username')
+            email      = form.cleaned_data.get('email')
+            
+            password = form.cleaned_data.get('password')
+            
+            user = User.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+                password=password,
+            )
+            
+            user.role = User.VENDOR
+            user.save()
+            
+            vendor = v_form.save(commit=False)
+            vendor.user = user
+            user_profile = userProfile.objects.get(user=user)
+            vendor.user_profile = user_profile
+            vendor.save()
+            messages.success(request, "Your account has been created successfully, Please wait for the approval.")
+            return redirect('registerVendor')
+        else:
+            print(f"form: {form.errors}")
+    else:
+         form = UserForm()
+         v_form = VendorForm()
+
+    context = {
+            'form': form,
+            'v_form': v_form,
+    }
+    return render(request, 'accounts/registerVendor.html', context=context)

@@ -18,4 +18,3 @@ class UserForm(forms.ModelForm):
         
         if confirm_password != password:
             raise forms.ValidationError('Passwords do not match')
-        

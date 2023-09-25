@@ -70,11 +70,11 @@ class User(AbstractBaseUser):
         here we return True which indicates that the user has permission to any module
     """
 
-    PROVIDER = 1
+    VENDOR = 1
     COSTUMER = 2
 
     ROLE_CHOICES = (
-        (PROVIDER, 'Provider'),
+        (VENDOR, 'Vendor'),
         (COSTUMER, 'Costumer'),
     )
     first_name = models.CharField(max_length=50)
